@@ -1,6 +1,6 @@
 import React from "react";
 
-import "components/InterviewerList";
+import "components/InterviewerList.scss";
 
 import InterviewerListItem from "./InterviewerListItem";
 
