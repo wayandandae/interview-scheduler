@@ -25,6 +25,21 @@ export function getAppointmentsForDay(state, day) {
 export function getInterview(state, interview) {
   // create a variable to hold detailed information of interviewer
   const detail = interview && state.interviewers[interview.interviewer];
-  // if detail exists, update interview with the new information, othewise null
+  // if detail exists, return interview object with updated information, othewise null
   return detail ? { ...interview, interviewer: detail } : null;
+}
+
+// helper function to get an array of interviewer objects of matching day
+export function getInterviewersForDay(state, day) {
+  // define an array to hold interviewer objects
+  const interviewerArray = [];
+
+  state.days.forEach((dayEntry) => {
+    // spread and push to the ID array if day name of state matches the day argument
+    if (dayEntry.name === day) {
+      interviewerArray.push(...dayEntry.interviewers);
+    }
+  });
+
+  return interviewerArray;
 }
