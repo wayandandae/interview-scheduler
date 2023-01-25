@@ -6,7 +6,11 @@ import "components/Application.scss";
 import DayList from "./DayList";
 import Appointment from "./Appointment";
 
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay,
+} from "helpers/selectors";
 
 export default function Application(props) {
   const [state, setState] = useState({
@@ -16,6 +20,44 @@ export default function Application(props) {
     interviewers: {},
   });
   const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
+
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+    axios
+      .put(`/api/appointments/${id}`, interview)
+      .then(() => setState({ ...state, appointments }))
+      .catch((error) => {
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        console.log(error.response.data);
+      });
+  }
+  function cancelInterview(id) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null,
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+    axios
+      .delete(`/api/appointments/${id}`)
+      .then(() => setState({ ...state, appointments }))
+      .catch((error) => {
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        console.log(error.response.data);
+      });
+  }
 
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
@@ -23,8 +65,11 @@ export default function Application(props) {
     return (
       <Appointment
         key={appointment.id}
-        interview={interview}
         {...appointment}
+        interview={interview}
+        interviewers={dailyInterviewers}
+        bookInterview={() => bookInterview}
+        cancelInterview={() => cancelInterview}
       />
     );
   });
@@ -37,7 +82,6 @@ export default function Application(props) {
       axios.get("/api/appointments"),
       axios.get("/api/interviewers"),
     ]).then((all) => {
-      console.log(all);
       setState((prev) => ({
         ...prev,
         days: all[0].data,
