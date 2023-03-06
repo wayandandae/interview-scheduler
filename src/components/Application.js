@@ -1,96 +1,43 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
+import React from "react";
+// style import
 import "components/Application.scss";
-
+// component import
 import DayList from "./DayList";
 import Appointment from "./Appointment";
-
+// helper/hook import
 import {
   getAppointmentsForDay,
   getInterview,
   getInterviewersForDay,
 } from "helpers/selectors";
+import useApplicationData from "hooks/useApplicationData";
 
 export default function Application(props) {
-  const [state, setState] = useState({
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {},
-  });
+  // define destructured state and functions from useApplicationData.js
+  const { state, setDay, bookInterview, cancelInterview } =
+    useApplicationData();
+
+  // fetch daily appointments and interviewers from currently selected day
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   const dailyInterviewers = getInterviewersForDay(state, state.day);
 
-  function bookInterview(id, interview) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview },
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-    axios
-      .put(`/api/appointments/${id}`, interview)
-      .then(() => setState({ ...state, appointments }))
-      .catch((error) => {
-        console.log(error.response.status);
-        console.log(error.response.headers);
-        console.log(error.response.data);
-      });
-  }
-  function cancelInterview(id) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-    axios
-      .delete(`/api/appointments/${id}`)
-      .then(() => setState({ ...state, appointments }))
-      .catch((error) => {
-        console.log(error.response.status);
-        console.log(error.response.headers);
-        console.log(error.response.data);
-      });
-  }
-
+  // create daily schedule of appointments using props passed
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
-
+    // render Appointment component to show interviewers and to book or cancel interviews
     return (
       <Appointment
         key={appointment.id}
         {...appointment}
         interview={interview}
         interviewers={dailyInterviewers}
-        bookInterview={() => bookInterview}
-        cancelInterview={() => cancelInterview}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
 
-  const setDay = (day) => setState({ ...state, day });
-
-  useEffect(() => {
-    Promise.all([
-      axios.get("/api/days"),
-      axios.get("/api/appointments"),
-      axios.get("/api/interviewers"),
-    ]).then((all) => {
-      setState((prev) => ({
-        ...prev,
-        days: all[0].data,
-        appointments: all[1].data,
-        interviewers: all[2].data,
-      }));
-    });
-  }, []);
-
+  // render sidebar with days and lighthouse icon
   return (
     <main className="layout">
       <section className="sidebar">
@@ -109,6 +56,7 @@ export default function Application(props) {
           alt="Lighthouse Labs"
         />
       </section>
+      {/* limit to 5pm as last appointment time */}
       <section className="schedule">
         {schedule}
         <Appointment key="last" time="5pm" />
