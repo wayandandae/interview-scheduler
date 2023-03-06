@@ -33,14 +33,14 @@ export function getInterview(state, interview) {
 export function getInterviewersForDay(state, day) {
   // define an array to hold interviewer objects
   const interviewerArray = [];
-  state.days.forEach((dayEntry) => {
-    // spread and push to the ID array if day name of state matches the day argument
-    if (dayEntry.name === day) {
-      dayEntry.interviewers.forEach((id) => {
-        interviewerArray.push(state.interviewers[id]);
-      });
-    }
-  });
+  const matchingDay = state.days.find((dayEntry) => dayEntry.name === day);
+
+  if (matchingDay && state.interviewers) {
+    Object.keys(state.interviewers).forEach((id) => {
+      // spread and push to the interviewer array if day name of state matches the day argument
+      interviewerArray.push(matchingDay.interviewers[id - 1]);
+    });
+  }
 
   return interviewerArray;
 }
