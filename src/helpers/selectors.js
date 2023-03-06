@@ -33,11 +33,12 @@ export function getInterview(state, interview) {
 export function getInterviewersForDay(state, day) {
   // define an array to hold interviewer objects
   const interviewerArray = [];
-
   state.days.forEach((dayEntry) => {
     // spread and push to the ID array if day name of state matches the day argument
     if (dayEntry.name === day) {
-      interviewerArray.push(...dayEntry.interviewers);
+      dayEntry.interviewers.forEach((id) => {
+        interviewerArray.push(state.interviewers[id]);
+      });
     }
   });
 
