@@ -1,10 +1,11 @@
 import React from "react";
 
 import "components/InterviewerList.scss";
-
+// import individual interview item component
 import InterviewerListItem from "./InterviewerListItem";
 
 export default function InterviewerList(props) {
+  // iterate through each interviewer to create interview component
   const interviewers = props.interviewers.map((interviewer) => {
     return (
       <InterviewerListItem
