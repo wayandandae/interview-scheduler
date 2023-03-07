@@ -22,8 +22,8 @@ The project covers fundamental concepts of <strong>React, PostgresQL, hooks, Jes
 
 - Clone this repository and [scheduler-api](https://github.com/lighthouse-labs/scheduler-api).
 - Install dependencies from <em>interview-scheduler</em> directory with `npm install`.
-- Run both <em>scheduler-api</em> and <em>interview-scheduler</em> servers with `npm run start`.
-- Optional: `npm run reset` in <em>scheduler-api</em> to reset database.
+- Run both <em>scheduler-api</em> and <em>interview-scheduler</em> servers with `npm start`.
+- Optional: `npm reset` in <em>scheduler-api</em> to reset database.
 
 ## Known Issues
 
