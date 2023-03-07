@@ -12,7 +12,7 @@ import {
 } from "helpers/selectors";
 import useApplicationData from "hooks/useApplicationData";
 
-export default function Application(props) {
+export default function Application() {
   // define destructured state and functions from useApplicationData.js
   const { state, setDay, bookInterview, cancelInterview } =
     useApplicationData();
