@@ -10,7 +10,6 @@ import {
   getByAltText,
   getByPlaceholderText,
   queryByText,
-  getAllByAltText,
 } from "@testing-library/react";
 
 import Application from "components/Application";
@@ -28,16 +27,13 @@ describe("Application", () => {
     });
   });
 
-  /* Cannot resolve these tests. Passed every test before, it has to do with getByPlaceholder and I cannot resolve this
-  after 6 hours of research and going back and forth. Apparently interviewers props were not passed to InterviewList
-  component just for these instances. Pure mystery. */
-  xit("loads data, books an interview and reduces the spots remaining for Monday by 1", async () => {
+  it("loads data, books an interview and reduces the spots remaining for Monday by 1", async () => {
     const { container } = render(<Application />);
+
+    await waitForElement(() => getByText(container, "Archie Cohen"));
 
     const appointments = getAllByTestId(container, "appointment");
     const appointment = appointments[0];
-
-    await waitForElement(() => getByText(container, "Archie Cohen"));
 
     fireEvent.click(getByAltText(appointment, "Add"));
     fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
@@ -83,7 +79,7 @@ describe("Application", () => {
 
     expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
   });
-  // does not work for the same reason
+  // I've put every effort and time but tests below do not pass
   xit("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
     const { container } = render(<Application />);
 
@@ -127,7 +123,7 @@ describe("Application", () => {
     expect(getByText(container, "Error")).toBeInTheDocument();
   });
 
-  xit("shows the delete error when failing to delete an existing appointment", async () => {
+  it("shows the delete error when failing to delete an existing appointment", async () => {
     axios.delete.mockRejectedValueOnce(new Error("Error"));
 
     const { container } = render(<Application />);
