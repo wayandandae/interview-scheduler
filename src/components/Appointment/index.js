@@ -8,6 +8,7 @@ import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
 import Confirm from "./Confirm";
+import Error from "./Error";
 // helper/hook import
 import useVisualMode from "hooks/useVisualMode";
 // constants for mode transition
@@ -88,6 +89,12 @@ export default function Appointment(props) {
           onCancel={back}
           interviewers={props.interviewers}
         />
+      )}
+      {mode === ERROR_SAVE && (
+        <Error message="Error occurred while saving." onClose={back} />
+      )}
+      {mode === ERROR_DELETE && (
+        <Error message="Error occurred while deleting." onClose={back} />
       )}
     </article>
   );
