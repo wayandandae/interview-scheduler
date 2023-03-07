@@ -27,6 +27,7 @@ export default function useApplicationData() {
     return axios
       .put(`/api/appointments/${id}`, { interview })
       .then(() => {
+        updateSpots(state, appointments, state.day);
         setState({ ...state, appointments });
       })
       .catch((error) => {
@@ -49,7 +50,10 @@ export default function useApplicationData() {
     // axios delete request to remove an appointment of selected id
     return axios
       .delete(`/api/appointments/${id}`)
-      .then(() => setState({ ...state, appointments }))
+      .then(() => {
+        updateSpots(state, appointments, state.day);
+        setState({ ...state, appointments });
+      })
       .catch((error) => {
         console.log(error.response.status);
         console.log(error.response.headers);
