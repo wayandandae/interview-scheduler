@@ -24,17 +24,10 @@ export default function useApplicationData() {
       [id]: appointment,
     };
     // axios put request to create or edit an appointment
-    return axios
-      .put(`/api/appointments/${id}`, { interview })
-      .then(() => {
-        updateSpots(state, appointments, state.day);
-        setState({ ...state, appointments });
-      })
-      .catch((error) => {
-        console.log(error.response.status);
-        console.log(error.response.headers);
-        console.log(error.response.data);
-      });
+    return axios.put(`/api/appointments/${id}`, { interview }).then(() => {
+      updateSpots(state, appointments, state.day);
+      setState({ ...state, appointments });
+    });
   }
 
   // function to cancel a created interview
@@ -48,17 +41,10 @@ export default function useApplicationData() {
       [id]: appointment,
     };
     // axios delete request to remove an appointment of selected id
-    return axios
-      .delete(`/api/appointments/${id}`)
-      .then(() => {
-        updateSpots(state, appointments, state.day);
-        setState({ ...state, appointments });
-      })
-      .catch((error) => {
-        console.log(error.response.status);
-        console.log(error.response.headers);
-        console.log(error.response.data);
-      });
+    return axios.delete(`/api/appointments/${id}`).then(() => {
+      updateSpots(state, appointments, state.day);
+      setState({ ...state, appointments });
+    });
   }
 
   // function to update remaining spots after creation or deletion of interviews
